@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+  <Include href="KnownImageIds.vsct"/>
+  <Include href="VSGlobals.vsct"/>
+
+  <Commands package="ReRoPackage">
+    <Groups>
+      <Group guid="ReRoPackageCmdSet" id="MainMenuGroup" priority="0x1600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_MAINMENU" />
+      </Group>
+
+      <Group guid="ReRoPackageCmdSet" id="SubMenuGroup" priority="0x0000">
+        <Parent guid="ReRoPackageCmdSet" id="SubMenu" />
+      </Group>
+
+      <Group guid="ReRoPackageCmdSet" id="HelpSubMenuGroup" priority="0x0000">
+        <Parent guid="ReRoPackageCmdSet" id="HelpSubMenu" />
+      </Group>
+
+    </Groups>
+
+    <Buttons>
+      <Button guid="ReRoPackageCmdSet" id="BuildMetadataDatabaseCommandId" priority="0x0102" type="Button">
+        <Parent guid="ReRoPackageCmdSet" id="SubMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="WriteToDatabase"/>
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>Build metadata database...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="ReRoPackageCmdSet" id="AboutShowCommandId" priority="0x0108" type="Button">
+        <Parent guid="ReRoPackageCmdSet" id="HelpSubMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="AboutBox"/>
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>About...</ButtonText>
+        </Strings>
+      </Button>
+
+    </Buttons>
+
+    <Menus>
+      
+      <Menu guid="ReRoPackageCmdSet" id="SubMenu" priority="0x0100" type="Menu">
+        <Parent guid="ReRoPackageCmdSet" id="MainMenuGroup" />
+        <Strings>
+          <ButtonText>Relational Roslyn</ButtonText>
+        </Strings>
+      </Menu>
+
+      <Menu guid="ReRoPackageCmdSet" id="HelpSubMenu" priority="0xFF00" type="Menu">
+        <Parent guid="ReRoPackageCmdSet" id="SubMenuGroup" />
+        <Strings>
+          <ButtonText>Help</ButtonText>
+        </Strings>
+      </Menu>
+
+    </Menus>
+
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="ReRoPackage" value="{CB3E379B-62B5-4117-AADF-4EC977E58247}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="ReRoPackageCmdSet" value="{5677189E-C94B-413F-8E29-B6050EBC901F}">
+
+      <IDSymbol name="MainMenuGroup" value="0x2000" />
+      
+      <IDSymbol name="SubMenu" value="0x1000" />
+      <IDSymbol name="HelpSubMenu" value="0x1050" />
+
+      <IDSymbol name="SubMenuGroup" value="0x2050" />
+      <IDSymbol name="HelpSubMenuGroup" value="0x2100" />
+
+      <IDSymbol name="BuildMetadataDatabaseCommandId" value="4433" />
+      <IDSymbol name="AboutShowCommandId" value="4839" />
+
+    </GuidSymbol>
+
+
+  </Symbols>
+</CommandTable>

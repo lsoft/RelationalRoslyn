@@ -1,2 +1,3 @@
 # RelationalRoslyn
-Inspect your project's Roslyn metadata with SQL
+
+Inspect your project's Roslyn metadata with SQL.
