@@ -19,6 +19,9 @@ CREATE TABLE named_types
     containing_namespace NVARCHAR(2000) NOT NULL,
     global_name NVARCHAR(2000) NOT NULL,
 
+    --FK to symbol_source
+    source_entity_uid UNIQUEIDENTIFIER NOT NULL,
+
     full_name NVARCHAR(2000) NOT NULL,
     name NVARCHAR(2000) NOT NULL,
     is_abstract bit NOT NULL,
@@ -38,6 +41,9 @@ CREATE TABLE members
 (
     type_global_name NVARCHAR(2000) NOT NULL,
 
+    --FK to symbol_source
+    source_entity_uid UNIQUEIDENTIFIER NOT NULL,
+
     name NVARCHAR(2000) NOT NULL,
     is_abstract bit NOT NULL,
     is_virtual bit NOT NULL,
@@ -47,6 +53,9 @@ GO
 CREATE TABLE member_fields
 (
     type_global_name NVARCHAR(2000) NOT NULL,
+
+    --FK to symbol_source
+    source_entity_uid UNIQUEIDENTIFIER NOT NULL,
 
     name NVARCHAR(2000) NOT NULL,
     is_abstract bit NOT NULL,
@@ -60,6 +69,9 @@ CREATE TABLE member_properties
 (
     type_global_name NVARCHAR(2000) NOT NULL,
 
+    --FK to symbol_source
+    source_entity_uid UNIQUEIDENTIFIER NOT NULL,
+
     name NVARCHAR(2000) NOT NULL,
     is_abstract bit NOT NULL,
     is_virtual bit NOT NULL,
@@ -70,6 +82,9 @@ GO
 CREATE TABLE member_methods
 (
     type_global_name NVARCHAR(2000) NOT NULL,
+
+    --FK to symbol_source
+    source_entity_uid UNIQUEIDENTIFIER NOT NULL,
 
     name NVARCHAR(2000) NOT NULL,
     method_kind NVARCHAR(2000) NOT NULL,
@@ -86,7 +101,7 @@ GO
 
 CREATE TABLE symbol_source
 (
-    type_global_name NVARCHAR(2000) NOT NULL,
+    source_entity_uid UNIQUEIDENTIFIER NOT NULL,
 
     source NVARCHAR(2000) NOT NULL,
     span_start INTEGER NOT NULL,

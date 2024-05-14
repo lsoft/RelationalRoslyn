@@ -75,7 +75,10 @@ namespace ReRoExtension.RelationalModel
                     continue;
                 }
 
-                var namedTypeEntity = BuildNamedType(namedTypeSymbol);
+                var namedTypeEntity = BuildNamedType(
+                    projectEntity.ProjectGuid,
+                    namedTypeSymbol
+                    );
 
                 projectEntity.NamedTypes.Add(namedTypeEntity);
             }
@@ -84,13 +87,16 @@ namespace ReRoExtension.RelationalModel
         }
 
         private static NamedTypeEntity BuildNamedType(
+            Guid projectGuid,
             INamedTypeSymbol namedTypeSymbol
             )
         {
             var typeEntity = new NamedTypeEntity
             {
+                ProjectGuid = projectGuid,
                 ContainingNamespace = namedTypeSymbol.ContainingNamespace.ToFullyQualifiedName(),
                 GlobalName = namedTypeSymbol.ToGlobalDisplayString(),
+                SourceEntityUid = Guid.NewGuid().ToString(),
                 FullName = namedTypeSymbol.ToFullDisplayString(),
                 Name = namedTypeSymbol.Name,
                 IsAbstract = namedTypeSymbol.IsAbstract,
@@ -173,6 +179,7 @@ namespace ReRoExtension.RelationalModel
             var result = new MemberEntity
             {
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
+                SourceEntityUid = Guid.NewGuid().ToString(),
                 Name = symbol.Name,
                 IsAbstract = symbol.IsAbstract,
                 IsVirtual = symbol.IsVirtual,
@@ -193,6 +200,7 @@ namespace ReRoExtension.RelationalModel
             var result = new FieldMemberEntity
             {
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
+                SourceEntityUid = Guid.NewGuid().ToString(),
                 Name = fieldSymbol.Name,
                 IsAbstract = fieldSymbol.IsAbstract,
                 IsVirtual = fieldSymbol.IsVirtual,
@@ -215,6 +223,7 @@ namespace ReRoExtension.RelationalModel
             var result = new PropertyMemberEntity
             {
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
+                SourceEntityUid = Guid.NewGuid().ToString(),
                 Name = propertySymbol.Name,
                 IsAbstract = propertySymbol.IsAbstract,
                 IsVirtual = propertySymbol.IsVirtual,
@@ -236,6 +245,7 @@ namespace ReRoExtension.RelationalModel
             var result = new MethodMemberEntity
             {
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
+                SourceEntityUid = Guid.NewGuid().ToString(),
                 Name = methodSymbol.Name,
                 MethodKind = methodSymbol.MethodKind.ToString(),
                 IsConstructor = methodSymbol.MethodKind == MethodKind.Constructor,

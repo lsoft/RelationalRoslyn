@@ -48,11 +48,10 @@ namespace ReRoExtension.Entity
     [Table("named_types")]
     public sealed class NamedTypeEntity : SourceBasedEntity
     {
-        [NotColumn]
-        public override string TypeGlobalName
+        [Column("id_project_guid")]
+        public Guid ProjectGuid
         {
-            get => GlobalName;
-            set => throw new InvalidOperationException();
+            get; set;
         }
 
         [Column("containing_namespace")]
@@ -63,6 +62,12 @@ namespace ReRoExtension.Entity
 
         [Column("global_name")]
         public string GlobalName
+        {
+            get; set;
+        }
+
+        [Column("source_entity_uid")]
+        public override string SourceEntityUid
         {
             get; set;
         }
@@ -146,7 +151,13 @@ namespace ReRoExtension.Entity
     public sealed class MemberEntity : SourceBasedEntity
     {
         [Column("type_global_name")]
-        public override string TypeGlobalName
+        public string TypeGlobalName
+        {
+            get; set;
+        }
+
+        [Column("source_entity_uid")]
+        public override string SourceEntityUid
         {
             get; set;
         }
@@ -180,7 +191,13 @@ namespace ReRoExtension.Entity
     public sealed class FieldMemberEntity : SourceBasedEntity
     {
         [Column("type_global_name")]
-        public override string TypeGlobalName
+        public string TypeGlobalName
+        {
+            get; set;
+        }
+
+        [Column("source_entity_uid")]
+        public override string SourceEntityUid
         {
             get; set;
         }
@@ -226,7 +243,13 @@ namespace ReRoExtension.Entity
     public sealed class PropertyMemberEntity : SourceBasedEntity
     {
         [Column("type_global_name")]
-        public override string TypeGlobalName
+        public string TypeGlobalName
+        {
+            get; set;
+        }
+
+        [Column("source_entity_uid")]
+        public override string SourceEntityUid
         {
             get; set;
         }
@@ -268,10 +291,17 @@ namespace ReRoExtension.Entity
     public sealed class MethodMemberEntity : SourceBasedEntity
     {
         [Column("type_global_name")]
-        public override string TypeGlobalName
+        public string TypeGlobalName
         {
             get; set;
         }
+
+        [Column("source_entity_uid")]
+        public override string SourceEntityUid
+        {
+            get; set;
+        }
+
 
         [Column("name")]
         public string Name
@@ -339,8 +369,8 @@ namespace ReRoExtension.Entity
     [Table("symbol_source")]
     public sealed class SymbolSourceEntity
     {
-        [Column("type_global_name")]
-        public string TypeGlobalName
+        [Column("source_entity_uid")]
+        public string SourceEntityUid
         {
             get; set;
         }
@@ -368,7 +398,7 @@ namespace ReRoExtension.Entity
 
     public abstract class SourceBasedEntity
     {
-        public abstract string TypeGlobalName
+        public abstract string SourceEntityUid
         {
             get; set;
         }
@@ -398,7 +428,7 @@ namespace ReRoExtension.Entity
             {
                 yield return new SymbolSourceEntity
                 {
-                    TypeGlobalName = TypeGlobalName,
+                    SourceEntityUid = SourceEntityUid,
                     Source = spi.Source,
                     SpanStart = spi.SpanStart,
                     SpanLength = spi.SpanLength
