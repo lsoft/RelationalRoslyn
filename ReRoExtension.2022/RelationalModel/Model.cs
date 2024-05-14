@@ -209,7 +209,7 @@ namespace ReRoExtension.RelationalModel
                     project.NamedTypes
                     );
                 await _dataConnection.BulkCopyAsync(
-                    project.NamedTypes.SelectMany(a => a.ProduceEntities())
+                    project.NamedTypes.SelectMany(a => a.ProduceSourceEntities())
                     );
 
                 foreach (var namedType in project.NamedTypes)
@@ -218,28 +218,28 @@ namespace ReRoExtension.RelationalModel
                         namedType.Members
                         );
                     await _dataConnection.BulkCopyAsync(
-                        namedType.Members.SelectMany(a => a.ProduceEntities())
+                        namedType.Members.SelectMany(a => a.ProduceSourceEntities())
                         );
 
                     await _dataConnection.BulkCopyAsync(
                         namedType.FieldMembers
                         );
                     await _dataConnection.BulkCopyAsync(
-                        namedType.FieldMembers.SelectMany(a => a.ProduceEntities())
+                        namedType.FieldMembers.SelectMany(a => a.ProduceSourceEntities())
                         );
 
                     await _dataConnection.BulkCopyAsync(
                         namedType.PropertyMembers
                         );
                     await _dataConnection.BulkCopyAsync(
-                        namedType.PropertyMembers.SelectMany(a => a.ProduceEntities())
+                        namedType.PropertyMembers.SelectMany(a => a.ProduceSourceEntities())
                         );
 
                     await _dataConnection.BulkCopyAsync(
                         namedType.MethodMembers
                         );
                     await _dataConnection.BulkCopyAsync(
-                        namedType.MethodMembers.SelectMany(a => a.ProduceEntities())
+                        namedType.MethodMembers.SelectMany(a => a.ProduceSourceEntities())
                         );
                 }
             }

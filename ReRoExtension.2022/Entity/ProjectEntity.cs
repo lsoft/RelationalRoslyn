@@ -392,7 +392,7 @@ namespace ReRoExtension.Entity
             }
         }
 
-        public IEnumerable<SymbolSourceEntity> ProduceEntities()
+        public IEnumerable<SymbolSourceEntity> ProduceSourceEntities()
         {
             foreach (var spi in SourceInfo.SourcePieces)
             {
