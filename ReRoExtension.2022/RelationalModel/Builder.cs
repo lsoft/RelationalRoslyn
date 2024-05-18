@@ -15,7 +15,7 @@ namespace ReRoExtension.RelationalModel
 {
     public static class Builder
     {
-        public static EntityModel BuildEntityModel(
+        public static async Task<EntityModel> BuildEntityModelAsync(
             Action<string> buildingProgressMadeAction
             )
         {
@@ -43,7 +43,8 @@ namespace ReRoExtension.RelationalModel
                     $"{pi + 1} / {projects.Count} ({project.Name})"
                     );
 
-                if (!project.TryGetCompilation(out var compilation))
+                var compilation = await project.GetCompilationAsync().ConfigureAwait(false);
+                if (compilation == null)
                 {
                     continue;
                 }
@@ -93,10 +94,11 @@ namespace ReRoExtension.RelationalModel
         {
             var typeEntity = new NamedTypeEntity
             {
+                Id = Guid.NewGuid(),
                 ProjectGuid = projectGuid,
                 ContainingNamespace = namedTypeSymbol.ContainingNamespace.ToFullyQualifiedName(),
                 GlobalName = namedTypeSymbol.ToGlobalDisplayString(),
-                SourceEntityUid = Guid.NewGuid().ToString(),
+                SourceEntityId = Guid.NewGuid().ToString(),
                 FullName = namedTypeSymbol.ToFullDisplayString(),
                 Name = namedTypeSymbol.Name,
                 IsAbstract = namedTypeSymbol.IsAbstract,
@@ -128,7 +130,7 @@ namespace ReRoExtension.RelationalModel
             )
         {
             {
-                var memberEntity = BuildMember(namedTypeSymbol, symbol);
+                var memberEntity = BuildMember(namedTypeSymbol, type, symbol);
                 type.Members.Add(memberEntity);
             }
 
@@ -140,7 +142,7 @@ namespace ReRoExtension.RelationalModel
                     return;
                 }
 
-                var fieldEntity = BuildField(namedTypeSymbol, fieldSymbol);
+                var fieldEntity = BuildField(namedTypeSymbol, type, fieldSymbol);
 
                 type.FieldMembers.Add(fieldEntity);
             }
@@ -152,7 +154,7 @@ namespace ReRoExtension.RelationalModel
                     return;
                 }
 
-                var propertyEntity = BuildProperty(namedTypeSymbol, propertySymbol);
+                var propertyEntity = BuildProperty(namedTypeSymbol, type, propertySymbol);
 
                 type.PropertyMembers.Add(propertyEntity);
             }
@@ -164,7 +166,7 @@ namespace ReRoExtension.RelationalModel
                     return;
                 }
 
-                var methodEntity = BuildMethod(namedTypeSymbol, methodSymbol);
+                var methodEntity = BuildMethod(namedTypeSymbol, type, methodSymbol);
 
                 type.MethodMembers.Add(methodEntity);
             }
@@ -173,13 +175,16 @@ namespace ReRoExtension.RelationalModel
 
         private static MemberEntity BuildMember(
             INamedTypeSymbol namedTypeSymbol,
+            NamedTypeEntity type,
             ISymbol symbol
             )
         {
             var result = new MemberEntity
             {
+                Id = Guid.NewGuid(),
+                NamedTypeId = type.Id,
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
-                SourceEntityUid = Guid.NewGuid().ToString(),
+                SourceEntityId = Guid.NewGuid().ToString(),
                 Name = symbol.Name,
                 IsAbstract = symbol.IsAbstract,
                 IsVirtual = symbol.IsVirtual,
@@ -194,13 +199,16 @@ namespace ReRoExtension.RelationalModel
 
         private static FieldMemberEntity BuildField(
             INamedTypeSymbol namedTypeSymbol,
+            NamedTypeEntity type,
             IFieldSymbol fieldSymbol
             )
         {
             var result = new FieldMemberEntity
             {
+                Id = Guid.NewGuid(),
+                NamedTypeId = type.Id,
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
-                SourceEntityUid = Guid.NewGuid().ToString(),
+                SourceEntityId = Guid.NewGuid().ToString(),
                 Name = fieldSymbol.Name,
                 IsAbstract = fieldSymbol.IsAbstract,
                 IsVirtual = fieldSymbol.IsVirtual,
@@ -217,13 +225,16 @@ namespace ReRoExtension.RelationalModel
 
         private static PropertyMemberEntity BuildProperty(
             INamedTypeSymbol namedTypeSymbol,
+            NamedTypeEntity type,
             IPropertySymbol propertySymbol
             )
         {
             var result = new PropertyMemberEntity
             {
+                Id = Guid.NewGuid(),
+                NamedTypeId = type.Id,
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
-                SourceEntityUid = Guid.NewGuid().ToString(),
+                SourceEntityId = Guid.NewGuid().ToString(),
                 Name = propertySymbol.Name,
                 IsAbstract = propertySymbol.IsAbstract,
                 IsVirtual = propertySymbol.IsVirtual,
@@ -239,13 +250,16 @@ namespace ReRoExtension.RelationalModel
 
         private static MethodMemberEntity BuildMethod(
             INamedTypeSymbol namedTypeSymbol,
+            NamedTypeEntity type,
             IMethodSymbol methodSymbol
             )
         {
             var result = new MethodMemberEntity
             {
+                Id = Guid.NewGuid(),
+                NamedTypeId = type.Id,
                 TypeGlobalName = namedTypeSymbol.ToGlobalDisplayString(),
-                SourceEntityUid = Guid.NewGuid().ToString(),
+                SourceEntityId = Guid.NewGuid().ToString(),
                 Name = methodSymbol.Name,
                 MethodKind = methodSymbol.MethodKind.ToString(),
                 IsConstructor = methodSymbol.MethodKind == MethodKind.Constructor,
@@ -279,7 +293,7 @@ namespace ReRoExtension.RelationalModel
                     text.ToString(),
                     syntax.SyntaxTree.FilePath,
                     syntaxReference.Span.Start,
-                    syntaxReference.Span.End
+                    syntaxReference.Span.End - syntaxReference.Span.Start
                     );
 
                 result.SourcePieces.Add(spi);

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ReRo.Extension.AA1A4D6D-4A5E-4D89-A177-9F5BAA4AE36B" Version="1.1" Language="en-US" Publisher="lsoft" />
+        <Identity Id="ReRo.Extension.AA1A4D6D-4A5E-4D89-A177-9F5BAA4AE36B" Version="1.4" Language="en-US" Publisher="lsoft" />
         <DisplayName>Relational Roslyn Visual Studio Extension</DisplayName>
         <Description xml:space="preserve">Inspect your project's Roslyn metadata with SQL</Description>
         <MoreInfo>https://github.com/lsoft/RelationalRoslyn</MoreInfo>

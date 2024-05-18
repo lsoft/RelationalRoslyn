@@ -36,18 +36,40 @@ namespace ReRoExtension.Wpf.BuildMetadata
 
         public string ModelStatus => _currentModel.ModelStatus;
 
+        public int SqlQueryFontSize => General.Instance.SqlQueryFontSize;
+
         public string CurrentQuery
         {
             get;
             set;
         } =
 $"""
+--press Ctrl+Enter or Execute Queries button to execute all SQL queries
+
+--request help
 select * from help
 --you can run many queries at once, just separate them with GO:
 GO
-select * from named_types
+--list of longest members (in lines of code):
+select distinct
+    nt.type_global_name,
+    mm.name,
+    LENGTH(ss.source) - LENGTH(REPLACE(ss.source, X'0A', '')) + 1 line_count
+from named_types nt
+join members mm on mm.id_named_type = nt.id
+join symbol_source ss on ss.id = mm.id_source
+order by
+    line_count desc
 GO
-select * from members
+--list of async methods without Async suffix in its name:
+select distinct
+    nt.type_global_name,
+    mm.name
+from named_types nt
+join member_methods mm on mm.id_named_type = nt.id
+where
+    mm.is_async = 1
+    and mm.name not like '%Async'
 """;
 
 
@@ -64,7 +86,7 @@ select * from members
             }
         }
 
-        public string TotalRowsMessage => "Всего строк: " + _dataTable.Rows.Count;
+        public string TotalRowsMessage => "Total rows: " + _dataTable.Rows.Count;
 
         public ObservableCollection<DataGridColumn> HeaderColumns
         {
@@ -142,7 +164,7 @@ select * from members
                 if (_executeQueryCommand is null)
                 {
                     _executeQueryCommand = new AsyncRelayCommand(
-                        async a =>
+                        async _ =>
                         {
                             await TaskScheduler.Default;
 
@@ -279,6 +301,7 @@ select * from members
             _dataTable = dataTable;
         }
 
+        public void UpdateAll() => OnPropertyChanged();
     }
 
 }

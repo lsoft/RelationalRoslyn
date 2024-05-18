@@ -44,7 +44,10 @@ namespace WpfHelpers
 
         public async void Execute(object parameter)
         {
-            Interlocked.Exchange(ref _isExecuting, 1);
+            if (Interlocked.Exchange(ref _isExecuting, 1) != 0)
+            {
+                return;
+            }
             RaiseCanExecuteChanged();
 
             try
@@ -53,7 +56,7 @@ namespace WpfHelpers
             }
             finally
             {
-                Interlocked.Exchange(ref _isExecuting, 0);
+                _ = Interlocked.Exchange(ref _isExecuting, 0);
                 RaiseCanExecuteChanged();
             }
         }

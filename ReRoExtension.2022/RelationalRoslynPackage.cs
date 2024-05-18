@@ -16,8 +16,7 @@ namespace ReRoExtension
     [Guid(PackageGuids.ReRoPackageString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(BuildMetadataDatabaseWindow))]
-    //[ProvideOptionPage(typeof(OptionsProvider.GeneralOptions), "Relational Roslyn", "General", 0, 0, true)]
-    //[ProvideProfile(typeof(OptionsProvider.GeneralOptions), "Relational Roslyn", "General", 0, 0, true)]
+    [ProvideOptionPage(typeof(OptionsProvider.GeneralOptions), "Relational Roslyn", "General", 0, 0, true, SupportsProfiles = true)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class RelationalRoslynPackage : AsyncPackage
@@ -37,6 +36,9 @@ namespace ReRoExtension
             //ss.AsyncStart();
 
             await BuildMetadataDatabaseCommand.InitializeAsync(
+                this
+                );
+            await AboutShowCommand.InitializeAsync(
                 this
                 );
 

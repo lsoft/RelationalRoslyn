@@ -1,20 +1,24 @@
-﻿using System;
-using System.ComponentModel.Design;
-using ReRoExtension.Wpf.BuildMetadata;
+﻿using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Community.VisualStudio.Toolkit;
 
 namespace ReRoExtension.Command
 {
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class BuildMetadataDatabaseCommand
+    internal sealed class AboutShowCommand
     {
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = PackageIds.BuildMetadataDatabaseCommandId;
+        public const int CommandId = PackageIds.AboutShowCommandId;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -27,27 +31,18 @@ namespace ReRoExtension.Command
         private readonly AsyncPackage _package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChooseDefaultExecutorCommand"/> class.
+        /// Initializes a new instance of the <see cref="ResetColorizationCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private BuildMetadataDatabaseCommand(
+        private AboutShowCommand(
             AsyncPackage package,
             OleMenuCommandService commandService
             )
         {
-            if (package is null)
-            {
-                throw new ArgumentNullException(nameof(package));
-            }
-
-            if (commandService is null)
-            {
-                throw new ArgumentNullException(nameof(commandService));
-            }
-
-            _package = package;
+            this._package = package ?? throw new ArgumentNullException(nameof(package));
+            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
@@ -57,7 +52,7 @@ namespace ReRoExtension.Command
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static BuildMetadataDatabaseCommand Instance
+        public static AboutShowCommand Instance
         {
             get;
             private set;
@@ -66,7 +61,7 @@ namespace ReRoExtension.Command
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
+        public IServiceProvider ServiceProvider
         {
             get
             {
@@ -87,7 +82,7 @@ namespace ReRoExtension.Command
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
-            Instance = new BuildMetadataDatabaseCommand(
+            Instance = new AboutShowCommand(
                 package,
                 commandService
                 );
@@ -104,18 +99,18 @@ namespace ReRoExtension.Command
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this._package.FindToolWindow(typeof(BuildMetadataDatabaseWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
-            {
-                throw new NotSupportedException("Cannot create tool window");
-            }
 
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            VS.MessageBox.Show(
+$"""
+Relational Roslyn Visual Studio Extension.
+    Version {Vsix.Version}
 
+https://github.com/lsoft/RelationalRoslyn/
+""",
+                string.Empty,
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK
+                );
         }
     }
 }

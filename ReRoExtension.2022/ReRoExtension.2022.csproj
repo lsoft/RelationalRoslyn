@@ -49,6 +49,7 @@
     <DeployExtension>True</DeployExtension>
     <LangVersion>latest</LangVersion>
     <CreateVsixContainer>True</CreateVsixContainer>
+    <NoWarn>80001</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +61,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Command\AboutShowCommand.cs" />
     <Compile Include="Command\BuildMetadataDatabaseCommand.cs" />
     <Compile Include="Entity\ProjectEntity.cs" />
     <Compile Include="Helper\ListHelper.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Helper\RoslynHelper.cs" />
     <Compile Include="Helper\SqlHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
+    <Compile Include="Options\General.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelationalModel\Builder.cs" />
     <Compile Include="RelationalModel\Model.cs" />

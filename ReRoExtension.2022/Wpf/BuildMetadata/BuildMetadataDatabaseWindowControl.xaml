@@ -14,6 +14,7 @@
     mc:Ignorable="d"
     xmlns:c="clr-namespace:ReRoExtension.Wpf"
     ui:VsTheme.UseVsTheme="True"
+    IsVisibleChanged="UserControl_IsVisibleChanged"
     >
     <Grid
         HorizontalAlignment="Stretch"
@@ -21,9 +22,9 @@
         >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition />
+            <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
 
         <Grid
@@ -64,15 +65,18 @@
                 Grid.Column="0"
                 Margin="5"
                 Background="Transparent"
+                FontSize="{Binding SqlQueryFontSize}"
                 CaretBrush="{Binding ElementName=ModelStatusTextBlock, Path=Foreground}"
                 AcceptsReturn="True"
                 Text="{Binding CurrentQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalScrollBarVisibility="Auto"
+                KeyUp="TextBox_KeyUp"
                 />
 
             <Button
                 Grid.Column="1"
                 Margin="5"
-                Content="Execute query"
+                Content="Execute queries"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Command="{Binding ExecuteQueryCommand}"

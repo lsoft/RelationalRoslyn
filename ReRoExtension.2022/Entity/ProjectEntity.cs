@@ -48,6 +48,12 @@ namespace ReRoExtension.Entity
     [Table("named_types")]
     public sealed class NamedTypeEntity : SourceBasedEntity
     {
+        [Column("id")]
+        public Guid Id
+        {
+            get; set;
+        }
+
         [Column("id_project_guid")]
         public Guid ProjectGuid
         {
@@ -60,14 +66,14 @@ namespace ReRoExtension.Entity
             get; set;
         }
 
-        [Column("global_name")]
+        [Column("type_global_name")]
         public string GlobalName
         {
             get; set;
         }
 
-        [Column("source_entity_uid")]
-        public override string SourceEntityUid
+        [Column("id_source")]
+        public override string SourceEntityId
         {
             get; set;
         }
@@ -150,14 +156,26 @@ namespace ReRoExtension.Entity
     [Table("members")]
     public sealed class MemberEntity : SourceBasedEntity
     {
+        [Column("id")]
+        public Guid Id
+        {
+            get; set;
+        }
+
+        [Column("id_named_type")]
+        public Guid NamedTypeId
+        {
+            get; set;
+        }
+
         [Column("type_global_name")]
         public string TypeGlobalName
         {
             get; set;
         }
 
-        [Column("source_entity_uid")]
-        public override string SourceEntityUid
+        [Column("id_source")]
+        public override string SourceEntityId
         {
             get; set;
         }
@@ -190,14 +208,26 @@ namespace ReRoExtension.Entity
     [Table("member_fields")]
     public sealed class FieldMemberEntity : SourceBasedEntity
     {
+        [Column("id")]
+        public Guid Id
+        {
+            get; set;
+        }
+
+        [Column("id_named_type")]
+        public Guid NamedTypeId
+        {
+            get; set;
+        }
+
         [Column("type_global_name")]
         public string TypeGlobalName
         {
             get; set;
         }
 
-        [Column("source_entity_uid")]
-        public override string SourceEntityUid
+        [Column("id_source")]
+        public override string SourceEntityId
         {
             get; set;
         }
@@ -242,14 +272,26 @@ namespace ReRoExtension.Entity
     [Table("member_properties")]
     public sealed class PropertyMemberEntity : SourceBasedEntity
     {
+        [Column("id")]
+        public Guid Id
+        {
+            get; set;
+        }
+
+        [Column("id_named_type")]
+        public Guid NamedTypeId
+        {
+            get; set;
+        }
+
         [Column("type_global_name")]
         public string TypeGlobalName
         {
             get; set;
         }
 
-        [Column("source_entity_uid")]
-        public override string SourceEntityUid
+        [Column("id_source")]
+        public override string SourceEntityId
         {
             get; set;
         }
@@ -290,14 +332,26 @@ namespace ReRoExtension.Entity
     [Table("member_methods")]
     public sealed class MethodMemberEntity : SourceBasedEntity
     {
+        [Column("id")]
+        public Guid Id
+        {
+            get; set;
+        }
+
+        [Column("id_named_type")]
+        public Guid NamedTypeId
+        {
+            get; set;
+        }
+
         [Column("type_global_name")]
         public string TypeGlobalName
         {
             get; set;
         }
 
-        [Column("source_entity_uid")]
-        public override string SourceEntityUid
+        [Column("id_source")]
+        public override string SourceEntityId
         {
             get; set;
         }
@@ -369,14 +423,20 @@ namespace ReRoExtension.Entity
     [Table("symbol_source")]
     public sealed class SymbolSourceEntity
     {
-        [Column("source_entity_uid")]
-        public string SourceEntityUid
+        [Column("id")]
+        public string Id
         {
             get; set;
         }
 
         [Column("source")]
         public string Source
+        {
+            get; set;
+        }
+
+        [Column("file_path")]
+        public string FilePath
         {
             get; set;
         }
@@ -398,7 +458,7 @@ namespace ReRoExtension.Entity
 
     public abstract class SourceBasedEntity
     {
-        public abstract string SourceEntityUid
+        public abstract string SourceEntityId
         {
             get; set;
         }
@@ -428,8 +488,9 @@ namespace ReRoExtension.Entity
             {
                 yield return new SymbolSourceEntity
                 {
-                    SourceEntityUid = SourceEntityUid,
+                    Id = SourceEntityId,
                     Source = spi.Source,
+                    FilePath = spi.FullFilePath,
                     SpanStart = spi.SpanStart,
                     SpanLength = spi.SpanLength
                 };

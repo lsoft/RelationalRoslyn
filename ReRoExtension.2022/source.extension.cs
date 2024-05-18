@@ -11,7 +11,7 @@ namespace ReRoExtension
         public const string Name = "Relational Roslyn Visual Studio Extension";
         public const string Description = @"Inspect your project's Roslyn metadata with SQL";
         public const string Language = "en-US";
-        public const string Version = "1.1";
+        public const string Version = "1.4";
         public const string Author = "lsoft";
         public const string Tags = "Roslyn SQL";
     }

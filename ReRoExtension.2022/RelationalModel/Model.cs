@@ -31,7 +31,7 @@ namespace ReRoExtension.RelationalModel
 
     public sealed class Model : IDisposable
     {
-        private readonly SqliteConnection _connection;
+        private SqliteConnection? _connection;
         
         private DataConnection _dataConnection;
 
@@ -85,8 +85,6 @@ namespace ReRoExtension.RelationalModel
             )
         {
             BuildingFinishTime = null;
-
-            _connection = new SqliteConnection("Data Source=:memory:");
         }
 
         public async Task BuildAsync(
@@ -110,9 +108,9 @@ namespace ReRoExtension.RelationalModel
                     buildingProgressMadeAction();
                 };
 
-                _inMemoryModel = Builder.BuildEntityModel(
+                _inMemoryModel = await Builder.BuildEntityModelAsync(
                     ReportProgress
-                    );
+                    ).ConfigureAwait(false);
 
                 ReportProgress("Saving data to in-memory sqlite database...");
 
@@ -247,12 +245,12 @@ namespace ReRoExtension.RelationalModel
 
         private void OpenDatabase()
         {
+            _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
             _dataConnection = new DataConnection(
                 new SqliteDataProvider(),
                 _connection
                 );
-
         }
 
         private async Task CreateDatabaseStructureAsync(
@@ -286,10 +284,14 @@ values
 
         private void CloseDatabase()
         {
-            if (_connection.State == System.Data.ConnectionState.Open)
+            if (_connection != null)
             {
-                _dataConnection.Close();
-                _connection.Close();
+                if (_connection.State == System.Data.ConnectionState.Open)
+                {
+                    _dataConnection.Close();
+                    _connection.Close();
+                    _connection = null;
+                }
             }
         }
 
