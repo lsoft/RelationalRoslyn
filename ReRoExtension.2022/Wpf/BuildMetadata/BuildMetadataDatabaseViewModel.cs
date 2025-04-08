@@ -70,6 +70,16 @@ join member_methods mm on mm.id_named_type = nt.id
 where
     mm.is_async = 1
     and mm.name not like '%Async'
+GO
+--list of referenced projects
+select
+    p.project_name parent_project,
+    ppp.project_name referenced_project
+from projects p
+left join project_references pp on pp.project_guid = p.project_guid
+left join projects ppp on ppp.project_guid = pp.referenced_project_guid
+order by
+    p.project_name asc
 """;
 
 

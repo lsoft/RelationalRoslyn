@@ -13,6 +13,20 @@ CREATE TABLE projects
         )
 );
 GO
+CREATE TABLE project_references
+(
+    --a FK into project.project_guid for parent project
+    project_guid UNIQUEIDENTIFIER NOT NULL,
+    
+    --a FK into project.project_guid for referenced project
+    referenced_project_guid UNIQUEIDENTIFIER NOT NULL,
+
+    PRIMARY KEY (
+        project_guid,
+        referenced_project_guid
+        )
+);
+GO
 CREATE TABLE named_types
 (
     --unique abstract id

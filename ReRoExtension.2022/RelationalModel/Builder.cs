@@ -68,6 +68,16 @@ namespace ReRoExtension.RelationalModel
                 ProjectName = project.Name
             };
 
+            foreach (var referencedProject in project.AllProjectReferences)
+            {
+                projectEntity.ReferencedProjects.Add(
+                    new ProjectReferenceEntity()
+                    {
+                        ProjectGuid = projectEntity.ProjectGuid,
+                        ReferencedProjectGuid = referencedProject.ProjectId.Id
+                    });
+            }
+
             var allTypesInCompilation = compilation.Assembly.GlobalNamespace.GetAllTypes(a => true);
             foreach (var typeSymbol in allTypesInCompilation)
             {

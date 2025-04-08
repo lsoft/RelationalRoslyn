@@ -17,7 +17,6 @@ namespace ReRoExtension.Entity
         }
     }
 
-
     [Table("projects")]
     public sealed class ProjectEntity
     {
@@ -39,9 +38,36 @@ namespace ReRoExtension.Entity
             get; set;
         }
 
+        [NotColumn]
+        public List<ProjectReferenceEntity> ReferencedProjects
+        {
+            get; set;
+        }
+
         public ProjectEntity()
         {
             NamedTypes = new List<NamedTypeEntity>();
+            ReferencedProjects = new List<ProjectReferenceEntity>();
+        }
+    }
+
+    [Table("project_references")]
+    public sealed class ProjectReferenceEntity
+    {
+        [PrimaryKey, Column("project_guid")]
+        public Guid ProjectGuid
+        {
+            get; set;
+        }
+
+        [PrimaryKey, Column("referenced_project_guid")]
+        public Guid ReferencedProjectGuid
+        {
+            get; set;
+        }
+
+        public ProjectReferenceEntity()
+        {
         }
     }
 

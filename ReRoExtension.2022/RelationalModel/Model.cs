@@ -162,27 +162,35 @@ namespace ReRoExtension.RelationalModel
                     var resultRow = new string[fc];
                     for (var i = 0; i < fc; i++)
                     {
-                        var columnType = qr.GetDataTypeName(i);
-                        switch (columnType)
+                        if (await qr.IsDBNullAsync(i))
                         {
-                            case "UNIQUEIDENTIFIER":
-                                var gv = qr.GetGuid(i);
-                                resultRow[i] = gv.ToString();
-                                break;
-                            case "INTEGER":
-                                var iv = qr.GetInt64(i);
-                                resultRow[i] = iv.ToString();
-                                break;
-                            case "bit":
-                                var bv = qr.GetBoolean(i);
-                                resultRow[i] = bv.ToString();
-                                break;
-                            case "NVARCHAR":
-                                var v = qr.GetString(i);
-                                resultRow[i] = v.ToString();
-                                break;
-                            default:
-                                throw new InvalidOperationException($"Unknown column type {columnType}");
+                            resultRow[i] = "<NULL>";
+                        }
+                        else
+                        {
+                            var columnType = qr.GetDataTypeName(i);
+                            switch (columnType)
+                            {
+                                case "UNIQUEIDENTIFIER":
+                                    var gv = qr.GetGuid(i);
+                                    resultRow[i] = gv.ToString();
+                                    break;
+                                case "INTEGER":
+                                    var iv = qr.GetInt64(i);
+                                    resultRow[i] = iv.ToString();
+                                    break;
+                                case "bit":
+                                    var bv = qr.GetBoolean(i);
+                                    resultRow[i] = bv.ToString();
+                                    break;
+                                case "NVARCHAR":
+                                    var v = qr.GetString(i);
+                                    resultRow[i] = v.ToString();
+                                    break;
+                                default:
+                                    throw new InvalidOperationException($"Unknown column type {columnType}");
+
+                            }
                         }
                     }
 
@@ -203,6 +211,9 @@ namespace ReRoExtension.RelationalModel
 
             foreach (var project in inMemoryModel.Projects)
             {
+                await _dataConnection.BulkCopyAsync(
+                    project.ReferencedProjects
+                    );
                 await _dataConnection.BulkCopyAsync(
                     project.NamedTypes
                     );
